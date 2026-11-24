@@ -2,540 +2,1308 @@
 <html lang="da">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theos Træning</title>
-    
-    <!-- PWA settings til iPhone & Android -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Theos Træning">
-    <meta name="theme-color" content="#000000">
-
+    <meta name="apple-mobile-web-app-title" content="FRAMED">
+    <meta name="theme-color" content="#0B0B0D">
+    <title>FRAMED — Analog Kamera & Mørkekammer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #000000;
-            --card-bg: #181818;
-            --accent-color: #ff4757;
-            --text-color: #ffffff;
-            --text-dim: #a0a0a0;
-            --disabled-color: #222222;
-            --success-color: #2ed573;
+            --bg-chassis: #0B0B0D;
+            --bg-panel: #16161A;
+            --bg-elevated: #202026;
+            --accent-amber: #E5A93C;
+            --accent-orange: #ea580c;
+            --border-subtle: rgba(255, 255, 255, 0.1);
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        * {
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
-        h1 { margin-bottom: 20px; font-size: 26px; text-align: center; font-weight: 800; letter-spacing: 0.5px; }
-
-        .tabs-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-            max-width: 500px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            background-color: #2c2c2e;
-            color: var(--text-color);
-            border: none;
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .tab-btn.active { background-color: var(--accent-color); }
-        .tab-btn.disabled { background-color: var(--disabled-color); color: #555; cursor: not-allowed; opacity: 0.5; }
-
-        .tab-content { display: none; width: 100%; max-width: 450px; }
-        .tab-content.active { display: block; }
-
-        .exercise-card {
-            background-color: var(--card-bg);
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .exercise-title { font-size: 17px; font-weight: bold; margin-bottom: 12px; }
-
-        .media-container {
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .media-container video, .media-container img { width: 100%; height: auto; border-radius: 8px; }
-
-        .placeholder-box {
-            width: 100%;
-            padding: 20px 0;
-            background-color: #222;
-            border: 2px dashed #444;
-            border-radius: 8px;
-            text-align: center;
-            color: var(--text-dim);
-            font-weight: 500;
-        }
-
-        .upload-btn-wrapper { margin-top: 10px; }
-        .upload-btn {
-            background-color: #333;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            display: inline-block;
-            border: 1px solid #555;
-        }
-        .file-input { display: none; }
-
-        .log-input-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #2a2a2a;
-        }
-
-        .log-input-wrapper {
-            display: flex;
-            flex-direction: column;
-            width: 50%;
-        }
-
-        .log-input-wrapper label {
-            font-size: 11px;
-            color: var(--text-dim);
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .log-input {
-            width: 100%;
-            padding: 8px;
-            background-color: #2c2c2e;
-            border: 1px solid #444;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-
-        .timer-wrapper {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #2a2a2a;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .timer-controls { display: flex; align-items: center; gap: 6px; }
-
-        .timer-display {
-            font-family: monospace;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--accent-color);
-            min-width: 55px;
-        }
-
-        .timer-btn {
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-start { background-color: #2ed573; }
-        .btn-stop { background-color: #ff4757; }
-
-        .run-select {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-            padding: 5px;
-            border-radius: 6px;
-        }
-
-        .calendar-container { background-color: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid #2a2a2a; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
-        .day-name { font-weight: bold; color: var(--text-dim); font-size: 11px; padding-bottom: 4px; }
-        
-        .day-cell {
-            background-color: #2c2c2e;
-            padding: 8px 2px;
-            border-radius: 6px;
-            min-height: 55px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            cursor: pointer;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-chassis);
+            color: #f4f4f5;
+            margin: 0;
+            padding: 0;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            overflow-x: hidden;
             user-select: none;
         }
 
-        .day-cell.trained { border: 2px solid var(--success-color); background-color: #11261a; }
-        .check-mark { color: var(--success-color); font-weight: bold; font-size: 18px; margin-top: 4px; }
-        .weight-tag { font-size: 11px; color: var(--accent-color); font-weight: bold; margin-top: 4px; }
-        
-        .cal-btn {
-            background-color: #333;
-            border: none;
-            color: #fff;
-            font-size: 10px;
-            padding: 4px 6px;
-            border-radius: 4px;
-            margin-top: 4px;
+        .font-mono-tech {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Taktile analoge knapper og slidere */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #2e2e34;
+            border-radius: 999px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #f4f4f5;
+            border: 2px solid var(--accent-amber);
             cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            transition: transform 0.1s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.15);
+            background: var(--accent-amber);
+        }
+
+        /* Udløserknap glød ved perfekt komposition */
+        @keyframes pulseAmber {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7), inset 0 0 12px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0), inset 0 0 20px rgba(245, 158, 11, 0.8); }
+        }
+
+        .shutter-locked {
+            border-color: #f59e0b !important;
+            background: radial-gradient(circle, #fbbf24 0%, #d97706 100%) !important;
+            animation: pulseAmber 1.5s infinite;
+        }
+
+        /* Scanningslaser effekt til AI Auto Frame */
+        @keyframes scanLine {
+            0% { top: 0%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .ai-scan-laser {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #f59e0b, #fff, #f59e0b, transparent);
+            box-shadow: 0 0 15px #f59e0b;
+            animation: scanLine 1.4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        /* Skjul scrollbar men bevar scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Kamerahus tekstur */
+        .leatherette-bg {
+            background-color: #0B0B0D;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 0);
+            background-size: 6px 6px;
+        }
+
+        /* Tap-to-Focus Reticle animation */
+        @keyframes focusPulse {
+            0% { transform: translate(-50%, -50%) scale(1.35); opacity: 0; }
+            30% { transform: translate(-50%, -50%) scale(0.95); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+        }
+
+        .focus-reticle-anim {
+            animation: focusPulse 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col leatherette-bg">
 
-    <h1>Theos Træning</h1>
+    <!-- Top Navigation / Kamerahus Topplade -->
+    <header class="sticky top-0 z-40 bg-[#0B0B0D]/95 backdrop-blur-md border-b border-white/10 px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#E5A93C] shadow-[0_0_8px_#E5A93C]"></div>
+            <span class="font-mono-tech font-bold tracking-widest text-sm sm:text-base text-zinc-100">FRAMED</span>
+            <span id="liveSensorBadge" class="font-mono-tech text-[10px] px-2 py-0.5 rounded bg-[#16161A] text-[#E5A93C] border border-[#E5A93C]/30">4K SENSOR</span>
+        </div>
 
-    <div class="tabs-container">
-        <button class="tab-btn active" onclick="openTab('mandag')">Mandag</button>
-        <button class="tab-btn" onclick="openTab('tirsdag')">Tirsdag</button>
-        <button class="tab-btn" onclick="openTab('onsdag')">Onsdag</button>
-        <button class="tab-btn disabled">Torsdag (Rest)</button>
-        <button class="tab-btn" onclick="openTab('fredag')">Fredag</button>
-        <button class="tab-btn disabled">Lørdag (Rest)</button>
-        <button class="tab-btn" onclick="openTab('sondag')">Søndag</button>
-        <button class="tab-btn" onclick="openTab('dage')">Dage</button>
-        <button class="tab-btn" onclick="openTab('vaegt')">Vægt</button>
-    </div>
+        <!-- Mode Switcher (Kamera vs. Mørkekammer) -->
+        <nav class="flex bg-[#16161A] p-1 rounded-xl border border-white/10">
+            <button id="tabCamera" onclick="switchTab('camera')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-zinc-800 text-[#E5A93C] shadow-sm flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span>Kamera</span>
+            </button>
+            <button id="tabDarkroom" onclick="switchTab('darkroom')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-zinc-400 hover:text-zinc-200 flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                <span>Mørkekammer</span>
+            </button>
+        </nav>
 
-    <div id="mandag" class="tab-content active"><div id="list-mandag"></div></div>
-    <div id="tirsdag" class="tab-content"><div id="list-tirsdag"></div></div>
-    <div id="onsdag" class="tab-content"><div id="list-onsdag"></div></div>
-    <div id="fredag" class="tab-content"><div id="list-fredag"></div></div>
-    <div id="sondag" class="tab-content"><div id="list-sondag"></div></div>
-    
-    <div id="dage" class="tab-content">
-        <div class="calendar-container">
-            <h3 style="margin:0 0 10px 0; font-size: 16px; text-align: center;">Træningsdage (Klik for automatisk ✓)</h3>
-            <div class="calendar-grid">
-                <div class="day-name">Man</div><div class="day-name">Tir</div><div class="day-name">Ons</div>
-                <div class="day-name">Tor</div><div class="day-name">Fre</div><div class="day-name">Lør</div>
-                <div class="day-name">Søn</div>
+        <!-- Hurtig Upload & Native 48MP Kamera Knapper -->
+        <div class="flex items-center gap-1.5">
+            <!-- Native iPhone/Android Hardware Pro Camera (48MP HDR) -->
+            <label title="Åbn telefonens indbyggede 48MP kamera" class="cursor-pointer bg-[#E5A93C]/15 hover:bg-[#E5A93C]/25 text-[#E5A93C] border border-[#E5A93C]/40 px-2.5 py-1.5 rounded-xl text-xs font-mono-tech font-semibold transition flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                <span>48MP</span>
+                <input type="file" id="nativeProCameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event, true)">
+            </label>
+
+            <!-- Importer fra Kamerarulle -->
+            <label class="cursor-pointer bg-[#16161A] hover:bg-zinc-800 text-zinc-200 border border-white/10 px-2.5 py-1.5 rounded-xl text-xs font-medium transition flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 text-[#E5A93C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <span class="hidden sm:inline">Import</span>
+                <input type="file" id="imageUploadInput" accept="image/*" class="hidden" onchange="handleImageUpload(event, false)">
+            </label>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- SEKTION 1: KAMERA & AI CAMERA COACH                                   -->
+    <!-- ===================================================================== -->
+    <main id="cameraView" class="flex-1 flex flex-col max-w-5xl w-full mx-auto p-2.5 sm:p-6 gap-3 sm:gap-4">
+        
+        <!-- Top Kamera Indstillinger (Format, ProRAW, Grid, Skift Kamera) -->
+        <div class="bg-[#16161A] border border-white/10 rounded-2xl p-2 sm:px-4 flex flex-wrap items-center justify-between gap-2">
+            <!-- Billedformat (Aspect Ratio) -->
+            <div class="flex items-center gap-1 bg-[#0B0B0D] p-1 rounded-xl border border-white/5">
+                <button onclick="setAspectRatio('3:4')" data-ratio="3:4" class="ratio-btn px-2.5 py-1 rounded-lg font-mono-tech text-xs font-semibold bg-[#E5A93C] text-zinc-950 transition">3:4</button>
+                <button onclick="setAspectRatio('4:5')" data-ratio="4:5" class="ratio-btn px-2.5 py-1 rounded-lg font-mono-tech text-xs font-medium text-zinc-400 hover:text-white transition">4:5</button>
+                <button onclick="setAspectRatio('1:1')" data-ratio="1:1" class="ratio-btn px-2.5 py-1 rounded-lg font-mono-tech text-xs font-medium text-zinc-400 hover:text-white transition">1:1</button>
+                <button onclick="setAspectRatio('9:16')" data-ratio="9:16" class="ratio-btn px-2.5 py-1 rounded-lg font-mono-tech text-xs font-medium text-zinc-400 hover:text-white transition">9:16</button>
             </div>
-            <div class="calendar-grid" id="training-calendar-days"></div>
-        </div>
-    </div>
 
-    <div id="vaegt" class="tab-content">
-        <div class="exercise-card" style="margin-bottom: 20px;">
-            <div class="exercise-title">Video</div>
-            <div class="placeholder-box">Snart</div>
-        </div>
-
-        <div class="calendar-container">
-            <h3 style="margin:0 0 10px 0; font-size: 16px; text-align: center;">Vægt Kalender</h3>
-            <div class="calendar-grid">
-                <div class="day-name">Man</div><div class="day-name">Tir</div><div class="day-name">Ons</div>
-                <div class="day-name">Tor</div><div class="day-name">Fre</div><div class="day-name">Lør</div>
-                <div class="day-name">Søn</div>
+            <!-- Tekniske Kamera Toggles (ProRAW / Grid / Skift Kamera) -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <button id="btnProRaw" onclick="toggleProRaw()" class="font-mono-tech text-[11px] px-2.5 py-1.5 rounded-lg border border-[#E5A93C]/40 bg-[#E5A93C]/10 text-[#E5A93C] font-semibold transition">
+                    ProRAW
+                </button>
+                <button id="btnGrid" onclick="toggleGrid()" class="font-mono-tech text-[11px] px-2.5 py-1.5 rounded-lg border border-white/10 bg-zinc-800/80 text-zinc-300 hover:text-white transition">
+                    Gitter
+                </button>
+                <button id="btnFlipCamera" onclick="flipCamera()" title="Skift kamera (Bag / Front)" class="px-2.5 py-1.5 rounded-lg border border-white/10 bg-zinc-800/80 text-zinc-200 hover:text-white transition flex items-center gap-1 font-mono-tech text-[11px]">
+                    <svg class="w-3.5 h-3.5 text-[#E5A93C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span id="cameraFacingLabel" class="hidden sm:inline">Bag</span>
+                </button>
             </div>
-            <div class="calendar-grid" id="weight-calendar-days"></div>
         </div>
+
+        <!-- Søger (Viewfinder) Container -->
+        <div class="relative flex-1 flex items-center justify-center bg-black rounded-3xl border border-white/10 p-2 sm:p-5 min-h-[380px] sm:min-h-[500px] overflow-hidden shadow-2xl">
+            
+            <!-- Dynamisk Beskåret Søger-ramme -->
+            <div id="viewfinderFrame" onclick="handleViewfinderTap(event)" class="relative overflow-hidden rounded-2xl bg-zinc-950 shadow-[0_0_50px_rgba(0,0,0,0.9)] border border-white/15 transition-all duration-300 flex items-center justify-center cursor-crosshair" style="aspect-ratio: 3/4; height: 100%; max-height: 540px; max-width: 100%;">
+                
+                <!-- Live Webcam / Mobil Kamera Video -->
+                <video id="cameraVideo" autoplay playsinline muted class="w-full h-full object-cover transition-transform duration-200 origin-center"></video>
+                
+                <!-- Fallback Demo Scene (Hvis brugeren ikke har webcam eller afviser adgang) -->
+                <canvas id="fallbackSceneCanvas" class="hidden w-full h-full object-cover"></canvas>
+
+                <!-- Tap-to-Focus / Exposure Reticle -->
+                <div id="focusReticle" class="hidden absolute z-30 pointer-events-none w-16 h-16 border-2 border-[#E5A93C] rounded-lg shadow-[0_0_15px_rgba(229,169,60,0.5)]">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 font-mono-tech text-[9px] bg-[#E5A93C] text-black font-bold px-1.5 rounded">AF/AE</div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-1.5 h-1.5 rounded-full bg-[#E5A93C]"></div>
+                    </div>
+                </div>
+
+                <!-- Tredjedelsreglen Gitter (Rule of Thirds) -->
+                <div id="gridOverlay" class="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3 z-10">
+                    <div class="border-r border-b border-white/20"></div>
+                    <div class="border-r border-b border-white/20"></div>
+                    <div class="border-b border-white/20"></div>
+                    <div class="border-r border-b border-white/20"></div>
+                    <div class="border-r border-b border-white/20"></div>
+                    <div class="border-b border-white/20"></div>
+                    <div class="border-r border-white/20"></div>
+                    <div class="border-r border-white/20"></div>
+                    <div></div>
+                </div>
+
+                <!-- AI Scanning Laser -->
+                <div id="aiScanLaser" class="ai-scan-laser hidden"></div>
+
+                <!-- AI Auto Frame / Your Frame Virtuel Ramme Overlay -->
+                <div id="compositionOverlay" class="absolute inset-0 z-20 pointer-events-none">
+                    <!-- Mål-ramme (Target Frame låst til motivet) -->
+                    <div id="targetFrameBox" class="hidden absolute border-2 border-amber-400 rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all duration-150">
+                        <!-- Hjørne-markeringer -->
+                        <div class="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-white"></div>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-white"></div>
+                        <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-white"></div>
+                        <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-white"></div>
+                        
+                        <!-- AI Label -->
+                        <div id="targetFrameLabel" class="absolute -top-6 left-0 bg-amber-500 text-zinc-950 font-mono-tech text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                            <span>AI MOTIV LÅST</span>
+                        </div>
+
+                        <!-- Center Sigtekorn -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div id="targetCrosshair" class="w-5 h-5 rounded-full border border-amber-400/80 flex items-center justify-center">
+                                <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Guide-ramme (Viser hvor brugeren skal føre motivet hen) -->
+                    <div id="centerGuideBox" class="hidden absolute inset-6 border border-dashed border-white/40 rounded-xl flex items-center justify-center">
+                        <div class="w-3 h-3 border border-white/60 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Interaktiv Tegneflade til 'Your Frame' -->
+                <div id="yourFrameDrawLayer" class="hidden absolute inset-0 z-30 cursor-crosshair touch-none" style="touch-action: none;"></div>
+
+                <!-- AI Coach Retnings-indikator & Status Banner -->
+                <div id="aiCoachBanner" class="absolute top-3 left-3 right-3 z-30 flex flex-col items-center pointer-events-none">
+                    <div id="aiCoachPill" class="bg-black/80 backdrop-blur-md border border-white/15 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-lg transition-all">
+                        <span id="aiCoachIcon" class="text-[#E5A93C] font-bold text-sm">✦</span>
+                        <span id="aiCoachText" class="font-mono-tech text-[11px] sm:text-xs text-zinc-100">Klar — Tryk Auto Frame eller tegn selv</span>
+                    </div>
+                </div>
+
+                <!-- Hardware & Digital Zoom Pills (0.5x, 1x, 2x, 3x) -->
+                <div onclick="event.stopPropagation()" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 bg-black/75 backdrop-blur-md p-1 rounded-full border border-white/15">
+                    <button onclick="setCameraZoom(0.5)" data-zoom="0.5" class="zoom-btn w-8 h-7 rounded-full font-mono-tech text-[11px] font-medium text-zinc-300 hover:text-white transition">0.5x</button>
+                    <button onclick="setCameraZoom(1)" data-zoom="1" class="zoom-btn w-8 h-7 rounded-full font-mono-tech text-[11px] font-bold bg-[#E5A93C] text-zinc-950 transition">1x</button>
+                    <button onclick="setCameraZoom(2)" data-zoom="2" class="zoom-btn w-8 h-7 rounded-full font-mono-tech text-[11px] font-medium text-zinc-300 hover:text-white transition">2x</button>
+                    <button onclick="setCameraZoom(3)" data-zoom="3" class="zoom-btn w-8 h-7 rounded-full font-mono-tech text-[11px] font-medium text-zinc-300 hover:text-white transition">3x</button>
+                </div>
+
+                <!-- Live Eksponeringsdata i bunden af søgeren -->
+                <div class="absolute bottom-2.5 left-3 right-3 z-20 flex items-center justify-between px-3 py-1 rounded-xl bg-black/70 backdrop-blur-sm border border-white/10 font-mono-tech text-[10px] sm:text-[11px] text-zinc-300 pointer-events-none">
+                    <span id="hudLens">24mm f/1.78</span>
+                    <span id="hudShutter">1/250s</span>
+                    <span id="hudIso">ISO 160</span>
+                    <span id="hudEv" class="text-[#E5A93C]">EV 0.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kamera Betjeningspanel (AI Coach Knapper + Udløser + Manuel EV) -->
+        <div class="bg-[#16161A] border border-white/10 rounded-3xl p-3.5 sm:p-4 flex flex-col gap-3.5">
+            <!-- Hovedknapper: Auto Frame | Udløser | Your Frame -->
+            <div class="grid grid-cols-3 items-center gap-3 pt-1">
+                
+                <!-- AI Auto Frame Knap -->
+                <button id="btnAutoFrame" onclick="triggerAutoFrame()" class="flex flex-col items-center justify-center gap-1 py-2.5 px-3 rounded-2xl bg-zinc-800/90 hover:bg-zinc-700 border border-white/10 transition active:scale-95">
+                    <div class="flex items-center gap-1.5 text-amber-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <span class="text-xs font-semibold">Auto Frame</span>
+                    </div>
+                    <span class="text-[10px] text-zinc-400">AI Komposition</span>
+                </button>
+
+                <!-- Fysisk Udløserknap (Shutter) -->
+                <div class="flex flex-col items-center justify-center">
+                    <button id="shutterButton" onclick="capturePhoto()" aria-label="Tag billede" class="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-zinc-100 border-4 border-zinc-500 p-1 flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90">
+                        <div class="w-full h-full rounded-full bg-white border border-zinc-300"></div>
+                    </button>
+                </div>
+
+                <!-- Your Frame (Tegn selv) Knap -->
+                <button id="btnYourFrame" onclick="toggleYourFrameMode()" class="flex flex-col items-center justify-center gap-1 py-2.5 px-3 rounded-2xl bg-zinc-800/90 hover:bg-zinc-700 border border-white/10 transition active:scale-95">
+                    <div class="flex items-center gap-1.5 text-zinc-200">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        <span class="text-xs font-semibold">Your Frame</span>
+                    </div>
+                    <span class="text-[10px] text-zinc-400">Tegn udsnit</span>
+                </button>
+            </div>
+
+            <!-- Demo Simulation Slider (Til test af Live Tracking når telefonen ligger stille på bordet) -->
+            <div id="trackingSimulatorBar" class="hidden bg-zinc-900/90 border border-amber-500/30 rounded-xl p-2.5 flex items-center justify-between gap-3">
+                <span class="font-mono-tech text-[11px] text-amber-400 whitespace-nowrap">Live Tracking Tilt:</span>
+                <input type="range" id="tiltSimSlider" min="-100" max="100" value="45" oninput="updateSimulatedTracking(this.value)">
+                <button onclick="resetAiCoach()" class="text-[11px] text-zinc-400 hover:text-white underline whitespace-nowrap">Nulstil</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- SEKTION 2: DIGITALT MØRKEKAMMER & ANALOGE RAMMER                      -->
+    <!-- ===================================================================== -->
+    <main id="darkroomView" class="hidden flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto p-3 sm:p-6 gap-5">
+        
+        <!-- Venstre / Top: Billedlærred (Live Preview af Film Look, Korn & Ramme) -->
+        <div class="flex-1 bg-[#0d0d0f] border border-white/10 rounded-3xl p-4 sm:p-8 flex flex-col items-center justify-center relative min-h-[380px] sm:min-h-[540px] shadow-2xl">
+            
+            <!-- Redigerings-status badge -->
+            <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
+                <span class="font-mono-tech text-[11px] px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/10 text-zinc-400">
+                    MØRKEKAMMER • IKKE-DESTRUKTIV
+                </span>
+            </div>
+
+            <!-- Sammenlign Original Knap (Hold nede) -->
+            <button id="btnCompareOriginal" onmousedown="setCompareOriginal(true)" onmouseup="setCompareOriginal(false)" onmouseleave="setCompareOriginal(false)" ontouchstart="setCompareOriginal(true)" ontouchend="setCompareOriginal(false)" class="absolute top-4 right-4 z-10 font-mono-tech text-[11px] px-3 py-1 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-white/15 text-zinc-200 active:bg-amber-500 active:text-black transition">
+                Hold for Original
+            </button>
+
+            <!-- Hoved-Canvas til Mørkekammer Preview -->
+            <div class="w-full h-full flex items-center justify-center overflow-hidden my-6">
+                <canvas id="darkroomCanvas" class="max-w-full max-h-[62vh] rounded shadow-[0_20px_60px_rgba(0,0,0,0.85)] transition-all duration-150"></canvas>
+            </div>
+
+            <!-- Bund-handlinger under billedet -->
+            <div class="w-full flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/5">
+                <button onclick="resetDarkroomEdits()" class="text-xs text-zinc-400 hover:text-white font-medium px-3 py-2.5 rounded-xl bg-zinc-900 border border-white/10 transition">
+                    Nulstil alt
+                </button>
+                
+                <div class="flex items-center gap-2">
+                    <button onclick="switchTab('camera')" class="text-xs text-zinc-300 hover:text-white font-medium px-3.5 py-2.5 rounded-xl bg-zinc-800 border border-white/10 transition">
+                        Tag nyt billede
+                    </button>
+                    <button onclick="downloadFinalImage()" class="text-xs font-semibold px-4 py-2.5 rounded-xl bg-[#E5A93C] hover:bg-amber-400 text-zinc-950 shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Gem / Del Billede</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Højre / Bund: Mørkekammer Kontrolpanel -->
+        <aside class="w-full lg:w-[400px] bg-[#1a1a1e] border border-white/10 rounded-3xl p-4 sm:p-5 flex flex-col gap-5 max-h-[82vh] overflow-y-auto no-scrollbar">
+            
+            <!-- Under-faner i Mørkekammeret -->
+            <div class="grid grid-cols-3 gap-1 bg-zinc-900 p-1 rounded-xl border border-white/5">
+                <button onclick="switchDarkroomSubtab('film')" id="subtabFilm" class="py-2 rounded-lg text-xs font-semibold bg-zinc-800 text-amber-400 transition">1. Film Looks</button>
+                <button onclick="switchDarkroomSubtab('adjust')" id="subtabAdjust" class="py-2 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition">2. Lys & Korn</button>
+                <button onclick="switchDarkroomSubtab('frames')" id="subtabFrames" class="py-2 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition">3. Rammer</button>
+            </div>
+
+            <!-- SUBTAB 1: ANALOG FILM LOOKS -->
+            <div id="panelFilm" class="flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-mono-tech text-xs uppercase tracking-wider text-zinc-400">Kalibrerede Filmruller</h3>
+                    <span id="activeFilmName" class="font-mono-tech text-xs text-amber-400 font-semibold">P400</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2.5">
+                    <!-- Original -->
+                    <button onclick="selectFilmPreset('original')" data-film="original" class="film-card p-3 rounded-2xl border border-white/10 bg-zinc-900/80 text-left hover:border-amber-500/50 transition">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-mono-tech font-bold text-xs text-white">ORIGINAL</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-400"></span>
+                        </div>
+                        <p class="text-[11px] text-zinc-400 leading-snug">Ren digital råfil uden farveprofil.</p>
+                    </button>
+
+                    <!-- P400 -->
+                    <button onclick="selectFilmPreset('p400')" data-film="p400" class="film-card p-3 rounded-2xl border-2 border-amber-500 bg-zinc-800/90 text-left transition">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-mono-tech font-bold text-xs text-amber-400">P400</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-300"></span>
+                        </div>
+                        <p class="text-[11px] text-zinc-300 leading-snug">Varme hudtoner, bløde pasteller & gyldent lys.</p>
+                    </button>
+
+                    <!-- N1600 -->
+                    <button onclick="selectFilmPreset('n1600')" data-film="n1600" class="film-card p-3 rounded-2xl border border-white/10 bg-zinc-900/80 text-left hover:border-amber-500/50 transition">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-mono-tech font-bold text-xs text-white">N1600</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        </div>
+                        <p class="text-[11px] text-zinc-400 leading-snug">Højfølsom natfilm med kølige cyan-skygger.</p>
+                    </button>
+
+                    <!-- RELIC -->
+                    <button onclick="selectFilmPreset('relic')" data-film="relic" class="film-card p-3 rounded-2xl border border-white/10 bg-zinc-900/80 text-left hover:border-amber-500/50 transition">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-mono-tech font-bold text-xs text-white">RELIC</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span>
+                        </div>
+                        <p class="text-[11px] text-zinc-400 leading-snug">Nostalgisk 70'er-look med falmet kontrast.</p>
+                    </button>
+
+                    <!-- MONO -->
+                    <button onclick="selectFilmPreset('mono')" data-film="mono" class="film-card p-3 rounded-2xl border border-white/10 bg-zinc-900/80 text-left hover:border-amber-500/50 transition">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-mono-tech font-bold text-xs text-white">MONO</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-100"></span>
+                        </div>
+                        <p class="text-[11px] text-zinc-400 leading-snug">Klassisk sort/hvid sølvgelatine med dyb sort.</p>
+                    </button>
+                </div>
+
+                <!-- Film Styrke Slider -->
+                <div class="bg-zinc-900/70 p-3.5 rounded-2xl border border-white/5 flex flex-col gap-2 mt-1">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-zinc-300 font-medium">Film Intensitet</span>
+                        <span id="valFilmStrength" class="font-mono-tech text-amber-400">100%</span>
+                    </div>
+                    <input type="range" id="sliderFilmStrength" min="0" max="100" value="100" oninput="updateDarkroomParam('filmStrength', this.value)">
+                </div>
+            </div>
+
+            <!-- SUBTAB 2: LYS, FARVER & FYSISKE FILMEFFEKTER -->
+            <div id="panelAdjust" class="hidden flex flex-col gap-4">
+                <h3 class="font-mono-tech text-xs uppercase tracking-wider text-zinc-400">Lys & Tonekurve</h3>
+                
+                <div class="flex flex-col gap-3.5 bg-zinc-900/60 p-3.5 rounded-2xl border border-white/5">
+                    <!-- Eksponering -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-zinc-300">Eksponering</span>
+                            <span id="valExposure" class="font-mono-tech text-amber-400">0</span>
+                        </div>
+                        <input type="range" id="sliderExposure" min="-50" max="50" value="0" oninput="updateDarkroomParam('exposure', this.value)">
+                    </div>
+
+                    <!-- Kontrast -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-zinc-300">Kontrast</span>
+                            <span id="valContrast" class="font-mono-tech text-amber-400">0</span>
+                        </div>
+                        <input type="range" id="sliderContrast" min="-50" max="50" value="0" oninput="updateDarkroomParam('contrast', this.value)">
+                    </div>
+
+                    <!-- Varme -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-zinc-300">Hvidbalance (Varme)</span>
+                            <span id="valWarmth" class="font-mono-tech text-amber-400">0</span>
+                        </div>
+                        <input type="range" id="sliderWarmth" min="-50" max="50" value="0" oninput="updateDarkroomParam('warmth', this.value)">
+                    </div>
+                </div>
+
+                <h3 class="font-mono-tech text-xs uppercase tracking-wider text-zinc-400 mt-1">Fysiske Filmeffekter</h3>
+                
+                <div class="flex flex-col gap-3.5 bg-zinc-900/60 p-3.5 rounded-2xl border border-white/5">
+                    <!-- Film Korn -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-zinc-300">Ægte Film Korn (35mm Grain)</span>
+                            <span id="valGrain" class="font-mono-tech text-amber-400">25%</span>
+                        </div>
+                        <input type="range" id="sliderGrain" min="0" max="100" value="25" oninput="updateDarkroomParam('grain', this.value)">
+                    </div>
+
+                    <!-- Halation -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-zinc-300">Halation (Rødlig højlys-glød)</span>
+                            <span id="valHalation" class="font-mono-tech text-amber-400">20%</span>
+                        </div>
+                        <input type="range" id="sliderHalation" min="0" max="100" value="20" oninput="updateDarkroomParam('halation', this.value)">
+                    </div>
+
+                    <!-- Vignettering -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-zinc-300">Vignettering</span>
+                            <span id="valVignette" class="font-mono-tech text-amber-400">15%</span>
+                        </div>
+                        <input type="range" id="sliderVignette" min="0" max="100" value="15" oninput="updateDarkroomParam('vignette', this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB 3: ANALOGE RAMMER & DATOSTEMPEL -->
+            <div id="panelFrames" class="hidden flex flex-col gap-4">
+                <h3 class="font-mono-tech text-xs uppercase tracking-wider text-zinc-400">Vælg Indramning</h3>
+                
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="selectFrameStyle('none')" data-frame="none" class="frame-btn py-2.5 px-2 rounded-xl border border-white/10 bg-zinc-900 text-xs font-medium text-zinc-300 transition">Ingen</button>
+                    <button onclick="selectFrameStyle('white')" data-frame="white" class="frame-btn py-2.5 px-2 rounded-xl border border-white/10 bg-zinc-900 text-xs font-medium text-zinc-300 transition">White</button>
+                    <button onclick="selectFrameStyle('paper')" data-frame="paper" class="frame-btn py-2.5 px-2 rounded-xl border border-white/10 bg-zinc-900 text-xs font-medium text-zinc-300 transition">Paper</button>
+                    <button onclick="selectFrameStyle('black')" data-frame="black" class="frame-btn py-2.5 px-2 rounded-xl border border-white/10 bg-zinc-900 text-xs font-medium text-zinc-300 transition">Black</button>
+                    <button onclick="selectFrameStyle('negative')" data-frame="negative" class="frame-btn py-2.5 px-2 rounded-xl border border-white/10 bg-zinc-900 text-xs font-medium text-zinc-300 transition">Negative</button>
+                    <button onclick="selectFrameStyle('specs')" data-frame="specs" class="frame-btn py-2.5 px-2 rounded-xl border-2 border-amber-500 bg-zinc-800 text-xs font-semibold text-amber-400 transition">Specs</button>
+                </div>
+
+                <!-- Specs Metadata Indstillinger (Kun synlig når Specs eller ramme er valgt) -->
+                <div id="specsCustomBox" class="bg-zinc-900/80 p-3.5 rounded-2xl border border-white/10 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-mono-tech text-[11px] text-amber-400 uppercase">EXIF / Specs Tekst</span>
+                        <span class="text-[10px] text-zinc-500">Viser nederst i rammen</span>
+                    </div>
+                    <input type="text" id="inputCameraModel" value="SHOT ON IPHONE • FRAMED" oninput="updateSpecsText()" class="w-full bg-zinc-950 border border-white/10 rounded-lg px-3 py-1.5 font-mono-tech text-xs text-zinc-200 focus:outline-none focus:border-amber-500">
+                    <input type="text" id="inputCameraExif" value="24mm  •  f/1.78  •  1/250s  •  ISO 160" oninput="updateSpecsText()" class="w-full bg-zinc-950 border border-white/10 rounded-lg px-3 py-1.5 font-mono-tech text-xs text-zinc-400 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <!-- Klassisk Engangskamera Datostempel -->
+                <div class="bg-zinc-900/80 p-3.5 rounded-2xl border border-white/10 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-zinc-200">Analogt Datostempel</p>
+                        <p class="font-mono-tech text-[11px] text-orange-500 mt-0.5" id="dateStampPreview">'26  11  24</p>
+                    </div>
+                    <button id="btnToggleDateStamp" onclick="toggleDateStamp()" class="w-12 h-6 rounded-full bg-amber-500 p-0.5 transition-colors flex items-center justify-end">
+                        <div class="w-5 h-5 rounded-full bg-white shadow"></div>
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+    </main>
+
+    <!-- Toast Besked (Erstatter alert) -->
+    <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-300 bg-zinc-900/95 border border-amber-500/40 text-zinc-100 px-4 py-2.5 rounded-full shadow-2xl font-mono-tech text-xs flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span id="toastMessage">Billede gemt!</span>
     </div>
 
     <script>
-        const program = {
-            mandag: [
-                { id: 'm1', name: 'Pec Deck Fly', upload: false },
-                { id: 'm2', name: 'Machine Shoulder Press', upload: false },
-                { id: 'm3', name: 'Seated Machine Triceps Dip', upload: false },
-                { id: 'm4', name: 'Cable V-Bar Overhead Triceps Extension', upload: false },
-                { id: 'm5', name: 'Lateral Raise', upload: false }
-            ],
-            tirsdag: [
-                { id: 't1', name: 'Close Grip Cable Lat Pulldown', upload: false },
-                { id: 't2', name: 'Cable Row', upload: false },
-                { id: 't3', name: 'Machine Row', upload: false },
-                { id: 't4', name: 'Machine Rear Delt Fly', upload: false },
-                { id: 't5', name: 'Hammer Curl', upload: false },
-                { id: 't6', name: 'Bayesian Curl', upload: false }
-            ],
-            onsdag: [
-                { id: 'o1', name: 'Løb - 2-5 min', upload: false, isRun: true },
-                { id: 'o2', name: 'Leg Extension', upload: false },
-                { id: 'o3', name: 'Leg Press', upload: false },
-                { id: 'o4', name: 'Calf Raise Seated', upload: false },
-                { id: 'o5', name: 'Kneeling Cable Crunch', upload: true },
-                { id: 'o6', name: 'Loaded Crunch', upload: true },
-                { id: 'o7', name: 'Hip Adduction', upload: true },
-                { id: 'o8', name: 'Back Extensions', upload: true }
-            ],
-            fredag: [
-                { id: 'f1', name: 'Pec Deck Fly', upload: true },
-                { id: 'f2', name: 'Wide Grip Lat Pulldown', upload: true },
-                { id: 'f3', name: 'Overhand Grip Cable Row', upload: true },
-                { id: 'f4', name: 'Preacher Curl', upload: true },
-                { id: 'f5', name: 'Lying Chest Press', upload: true },
-                { id: 'f6', name: 'Cable V Bar Pushdown', upload: true },
-                { id: 'f7', name: 'Single Arm Tricep Pushdown', upload: true },
-                { id: 'f8', name: 'Lateral Raise', upload: true }
-            ],
-            sondag: [
-                { id: 's1', name: 'Løb - 2-5 min', upload: true, isRun: true },
-                { id: 's2', name: 'Leg Extensions', upload: true },
-                { id: 's3', name: 'Seated Hamstring Curl', upload: true },
-                { id: 's4', name: 'Leg Press', upload: true },
-                { id: 's5', name: 'Kneeling Cable Crunch', upload: true },
-                { id: 's6', name: 'Back Extension', upload: true }
-            ]
+        /**
+         * FRAMED PERSONAL EDITION - CORE ENGINE
+         * Håndterer Live Webcam / Fallback Demo, AI Camera Coach, Live Tracking,
+         * Analogt Mørkekammer (Pixel-level LUT & Film Grain) og Ramme-eksport.
+         */
+
+        // ==========================================
+        // 1. GLOBAL APPLIKATIONS-TILSTAND (STATE)
+        // ==========================================
+        const state = {
+            activeTab: 'camera',
+            aspectRatio: '3:4',
+            proRaw: true,
+            showGrid: true,
+            facingMode: 'environment',
+            cameraStream: null,
+            videoTrack: null,
+            zoomLevel: 1,
+            supportsHardwareZoom: false,
+            usingFallbackScene: false,
+            cameraEv: 0,
+            sensorResolutionText: '4K SENSOR',
+
+            // AI Coach & Live Tracking Tilstand
+            aiMode: 'idle', // 'idle' | 'scanning' | 'tracking' | 'yourframe_draw' | 'yourframe_locked'
+            targetBox: { x: 0.25, y: 0.22, w: 0.5, h: 0.56 }, // Normaliserede koordinater (0..1)
+            trackingOffset: { x: 0.12, y: -0.08 },
+            isCompositionLocked: false,
+
+            // Mørkekammer Tilstand (Ikke-destruktiv)
+            sourceImage: null, // HTMLImageElement eller Canvas med fuld opløsning
+            compareOriginal: false,
+            darkroom: {
+                film: 'p400',
+                filmStrength: 100,
+                exposure: 0,
+                contrast: 0,
+                warmth: 0,
+                grain: 25,
+                halation: 20,
+                vignette: 15,
+                frame: 'specs',
+                dateStamp: true,
+                cameraTitle: 'IPHONE PRORAW • FRAMED',
+                cameraExif: '24mm  •  f/1.78  •  1/250s  •  ISO 160'
+            }
         };
 
-        function renderProgram() {
-            Object.keys(program).forEach(day => {
-                const container = document.getElementById(`list-${day}`);
-                if (!container) return;
+        // DOM Referencer
+        const videoEl = document.getElementById('cameraVideo');
+        const fallbackCanvas = document.getElementById('fallbackSceneCanvas');
+        const darkroomCanvas = document.getElementById('darkroomCanvas');
+        const darkroomCtx = darkroomCanvas.getContext('2d', { willReadFrequently: true });
 
-                program[day].forEach((ex) => {
-                    const containerId = `media-${ex.id}`;
-                    const timerId = `timer-${ex.id}`;
+        // ==========================================
+        // 2. INITIALISERING & KAMERA START
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            initDateStampText();
+            startCamera();
+            initYourFrameDrawing();
+            setupOrientationTracking();
+            // Generer et flot analogt startbillede til mørkekammeret med det samme
+            createDefaultDemoPhoto();
+        });
 
-                    const savedKg = localStorage.getItem(`kg-${ex.id}`) || '';
-                    const savedReps = localStorage.getItem(`reps-${ex.id}`) || '';
+        function initDateStampText() {
+            const now = new Date();
+            const yy = String(now.getFullYear()).slice(-2);
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const stamp = `'${yy}  ${mm}  ${dd}`;
+            document.getElementById('dateStampPreview').textContent = stamp;
+            state.dateStampString = stamp;
+        }
 
-                    let mediaHtml = ex.upload ? 
-                        `<div class="placeholder-box">Ingen video valgt</div>` : 
-                        `<div class="placeholder-box">Snart</div>`;
+        async function startCamera() {
+            if (state.cameraStream) {
+                state.cameraStream.getTracks().forEach(t => t.stop());
+            }
 
-                    let uploadHtml = ex.upload ? `
-                        <div class="upload-btn-wrapper">
-                            <label class="upload-btn">Vælg video/billede
-                                <input type="file" class="file-input" accept="video/*,image/*" onchange="loadMedia(event, '${containerId}')">
-                            </label>
-                        </div>` : '';
+            try {
+                // Bed telefonens sensor om absolut højeste opløsning (op til 4K / 12MP) og 60fps
+                const highResConstraints = {
+                    video: {
+                        facingMode: state.facingMode === 'environment' ? { ideal: 'environment' } : 'user',
+                        width: { ideal: 4096 },
+                        height: { ideal: 3072 },
+                        frameRate: { ideal: 60 }
+                    },
+                    audio: false
+                };
 
-                    let timerControls = ex.isRun ? `
-                        <select id="select-${timerId}" class="run-select">
-                            <option value="120">2 min</option>
-                            <option value="180">3 min</option>
-                            <option value="240">4 min</option>
-                            <option value="300">5 min</option>
-                        </select>
-                        <button class="timer-btn btn-start" onclick="startCustomTimer('${timerId}')">Start</button>
-                        <button class="timer-btn btn-stop" onclick="stopTimer('${timerId}')">Stop</button>
-                    ` : `
-                        <button class="timer-btn btn-start" onclick="startTimer('${timerId}', 120)">Start</button>
-                        <button class="timer-btn btn-stop" onclick="stopTimer('${timerId}')">Stop</button>
-                    `;
+                let stream;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia(highResConstraints);
+                } catch (exactErr) {
+                    // Fallback til standard constraints hvis enheden ikke accepterer 4K-hint
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: state.facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } },
+                        audio: false
+                    });
+                }
 
-                    const card = document.createElement('div');
-                    card.className = 'exercise-card';
-                    card.innerHTML = `
-                        <div class="exercise-title">${ex.name}</div>
-                        <div class="media-container" id="${containerId}">${mediaHtml}</div>
-                        ${uploadHtml}
-                        
-                        <div class="log-input-group">
-                            <div class="log-input-wrapper">
-                                <label>Kg</label>
-                                <input type="number" class="log-input" placeholder="0" value="${savedKg}" onchange="saveLog('kg-${ex.id}', this.value)">
-                            </div>
-                            <div class="log-input-wrapper">
-                                <label>Reps</label>
-                                <input type="number" class="log-input" placeholder="0" value="${savedReps}" onchange="saveLog('reps-${ex.id}', this.value)">
-                            </div>
-                        </div>
+                state.cameraStream = stream;
+                state.usingFallbackScene = false;
+                videoEl.srcObject = stream;
+                videoEl.classList.remove('hidden');
+                fallbackCanvas.classList.add('hidden');
 
-                        <div class="timer-wrapper">
-                            <div class="timer-controls">${timerControls}</div>
-                            <div class="timer-display" id="${timerId}">02:00</div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
+                // Spejlvend søgeren naturligt hvis frontkameraet bruges
+                videoEl.style.transform = state.facingMode === 'user' ? `scaleX(-1) scale(${state.zoomLevel})` : `scale(${state.zoomLevel})`;
+
+                const track = stream.getVideoTracks()[0];
+                state.videoTrack = track;
+
+                // Tjek hardware-kapaciteter (Hardware Zoom & Fokus)
+                if (track && typeof track.getCapabilities === 'function') {
+                    const caps = track.getCapabilities();
+                    state.supportsHardwareZoom = Boolean(caps.zoom);
+                }
+
+                // Aflæs den faktiske sensoropløsning når videostrømmen er klar
+                videoEl.onloadedmetadata = () => {
+                    const vw = videoEl.videoWidth;
+                    const vh = videoEl.videoHeight;
+                    const label = vw >= 3800 ? `4K • ${vw}×${vh}` : (vw >= 1900 ? `HD+ • ${vw}×${vh}` : `${vw}×${vh}`);
+                    state.sensorResolutionText = label;
+                    document.getElementById('liveSensorBadge').textContent = label;
+                };
+            } catch (err) {
+                // Fallback hvis brugeren er på desktop uden webcam eller afviser tilladelse
+                console.info('Bruger interaktiv demo-søger (intet kamera fundet):', err.message);
+                state.usingFallbackScene = true;
+                videoEl.classList.add('hidden');
+                fallbackCanvas.classList.remove('hidden');
+                document.getElementById('liveSensorBadge').textContent = 'DEMO SØGER';
+                startFallbackAnimation();
+            }
+        }
+
+        function flipCamera() {
+            state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+            state.zoomLevel = 1;
+            updateZoomButtonsUI(1);
+            document.getElementById('cameraFacingLabel').textContent = state.facingMode === 'environment' ? 'Bag' : 'Front';
+            startCamera();
+            showToast(state.facingMode === 'environment' ? 'Bagkamera (Hovedsensor)' : 'Frontkamera valgt');
+        }
+
+        // Hardware & Digital Zoom (0.5x, 1x, 2x, 3x)
+        async function setCameraZoom(zoom) {
+            state.zoomLevel = zoom;
+            updateZoomButtonsUI(zoom);
+
+            // Opdater brændvidde-visning i HUD
+            const focalMap = { 0.5: '13mm f/2.2', 1: '24mm f/1.78', 2: '48mm f/1.78', 3: '77mm f/2.8' };
+            document.getElementById('hudLens').textContent = focalMap[zoom] || '24mm f/1.78';
+
+            if (state.videoTrack && state.supportsHardwareZoom) {
+                try {
+                    const caps = state.videoTrack.getCapabilities();
+                    const clampedZoom = Math.max(caps.zoom.min, Math.min(caps.zoom.max, zoom));
+                    await state.videoTrack.applyConstraints({ advanced: [{ zoom: clampedZoom }] });
+                    return;
+                } catch (e) {
+                    console.warn('Hardware zoom ikke understøttet for dette trin, bruger digital zoom.');
+                }
+            }
+
+            // Glidende digital zoom fallback
+            const visualScale = zoom < 1 ? 1 : zoom;
+            const mirror = state.facingMode === 'user' ? 'scaleX(-1) ' : '';
+            videoEl.style.transform = `${mirror}scale(${visualScale})`;
+        }
+
+        function updateZoomButtonsUI(activeZoom) {
+            document.querySelectorAll('.zoom-btn').forEach(btn => {
+                if (parseFloat(btn.dataset.zoom) === activeZoom) {
+                    btn.className = 'zoom-btn w-8 h-7 rounded-full font-mono-tech text-[11px] font-bold bg-[#E5A93C] text-zinc-950 transition';
+                } else {
+                    btn.className = 'zoom-btn w-8 h-7 rounded-full font-mono-tech text-[11px] font-medium text-zinc-300 hover:text-white transition';
+                }
             });
         }
 
-        function saveLog(key, value) {
-            localStorage.setItem(key, value);
+        // Tap-to-Focus & Eksponering på søgeren
+        async function handleViewfinderTap(e) {
+            if (state.aiMode === 'yourframe_draw') return;
+
+            const vf = document.getElementById('viewfinderFrame');
+            const reticle = document.getElementById('focusReticle');
+            const rect = vf.getBoundingClientRect();
+
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            reticle.style.left = `${x}px`;
+            reticle.style.top = `${y}px`;
+            reticle.classList.remove('hidden', 'focus-reticle-anim');
+            void reticle.offsetWidth; // Genstart animation
+            reticle.classList.add('focus-reticle-anim');
+
+            // Forsøg at udløse kontinuerlig autofokus på mobilsensoren
+            if (state.videoTrack && typeof state.videoTrack.applyConstraints === 'function') {
+                try {
+                    await state.videoTrack.applyConstraints({
+                        advanced: [{ focusMode: 'continuous', exposureMode: 'continuous' }]
+                    });
+                } catch (err) {
+                    // Ignorer hvis browseren ikke tillader manuel fokus-constraint
+                }
+            }
+
+            clearTimeout(window._focusHideTimer);
+            window._focusHideTimer = setTimeout(() => {
+                reticle.classList.add('hidden');
+            }, 1400);
+        }
         }
 
-        function openTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
-
-            if (tabName === 'dage') renderTrainingCalendar();
-            if (tabName === 'vaegt') renderWeightCalendar();
+        function flipCamera() {
+            state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+            showToast(state.facingMode === 'environment' ? 'Bagkamera valgt' : 'Frontkamera valgt');
         }
 
-        function loadMedia(event, containerId) {
+        // Levende poetisk demo-scene til søgeren, hvis webcam ikke er tilgængeligt
+        let fallbackAnimId = null;
+        function startFallbackAnimation() {
+            if (fallbackAnimId) cancelAnimationFrame(fallbackAnimId);
+            const ctx = fallbackCanvas.getContext('2d');
+            let t = 0;
+
+            function renderScene() {
+                t += 0.012;
+                const w = fallbackCanvas.width = 900;
+                const h = fallbackCanvas.height = 1200;
+
+                // Gylden time himmelgradient
+                const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.72);
+                skyGrad.addColorStop(0, '#1e293b');
+                skyGrad.addColorStop(0.45, '#7c2d12');
+                skyGrad.addColorStop(0.75, '#ea580c');
+                skyGrad.addColorStop(1, '#fbbf24');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, w, h);
+
+                // Lavthængende sol med glød (perfekt til Halation-test!)
+                const sunX = w * 0.62 + Math.sin(t * 0.5) * 18;
+                const sunY = h * 0.44 + Math.cos(t * 0.4) * 10;
+                const sunGlow = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 220);
+                sunGlow.addColorStop(0, 'rgba(255, 251, 235, 1)');
+                sunGlow.addColorStop(0.25, 'rgba(253, 224, 71, 0.85)');
+                sunGlow.addColorStop(1, 'rgba(234, 88, 12, 0)');
+                ctx.fillStyle = sunGlow;
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, 220, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Bløde bakker i baggrunden
+                ctx.fillStyle = '#271c19';
+                ctx.beginPath();
+                ctx.moveTo(0, h * 0.68);
+                ctx.quadraticCurveTo(w * 0.35, h * 0.56, w * 0.7, h * 0.66);
+                ctx.quadraticCurveTo(w * 0.88, h * 0.71, w, h * 0.64);
+                ctx.lineTo(w, h);
+                ctx.lineTo(0, h);
+                ctx.fill();
+
+                // Forgrunds-silhuet (Arkitektonisk bue / motiv)
+                ctx.fillStyle = '#0f0d0e';
+                ctx.fillRect(0, h * 0.72, w, h * 0.28);
+
+                // Klassisk gadelampe / motiv i det gyldne snit
+                const poleX = w * 0.36;
+                ctx.strokeStyle = '#09090b';
+                ctx.lineWidth = 14;
+                ctx.beginPath();
+                ctx.moveTo(poleX, h * 0.75);
+                ctx.lineTo(poleX, h * 0.36);
+                ctx.arc(poleX + 45, h * 0.36, 45, Math.PI, 0, false);
+                ctx.stroke();
+
+                // Varm glødepære på lygten
+                const lampX = poleX + 90;
+                const lampY = h * 0.38;
+                const lampGlow = ctx.createRadialGradient(lampX, lampY, 2, lampX, lampY, 75);
+                lampGlow.addColorStop(0, '#fffbeb');
+                lampGlow.addColorStop(0.3, '#f59e0b');
+                lampGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                ctx.fillStyle = lampGlow;
+                ctx.beginPath();
+                ctx.arc(lampX, lampY, 75, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Eksponerings-simulering
+                if (state.cameraEv !== 0) {
+                    ctx.fillStyle = state.cameraEv > 0
+                        ? `rgba(255,255,255,${state.cameraEv * 0.18})`
+                        : `rgba(0,0,0,${Math.abs(state.cameraEv) * 0.25})`;
+                    ctx.fillRect(0, 0, w, h);
+                }
+
+                if (state.activeTab === 'camera' && state.usingFallbackScene) {
+                    fallbackAnimId = requestAnimationFrame(renderScene);
+                }
+            }
+            renderScene();
+        }
+
+        // ==========================================
+        // 3. KAMERA KONTROLLER & AI CAMERA COACH
+        // ==========================================
+        function setAspectRatio(ratio) {
+            state.aspectRatio = ratio;
+            const vf = document.getElementById('viewfinderFrame');
+            const [w, h] = ratio.split(':');
+            vf.style.aspectRatio = `${w}/${h}`;
+
+            document.querySelectorAll('.ratio-btn').forEach(btn => {
+                if (btn.dataset.ratio === ratio) {
+                    btn.className = 'ratio-btn px-2.5 py-1 rounded-lg font-mono-tech text-xs font-semibold bg-amber-500 text-zinc-950 transition';
+                } else {
+                    btn.className = 'ratio-btn px-2.5 py-1 rounded-lg font-mono-tech text-xs font-medium text-zinc-400 hover:text-white transition';
+                }
+            });
+        }
+
+        function toggleProRaw() {
+            state.proRaw = !state.proRaw;
+            const btn = document.getElementById('btnProRaw');
+            if (state.proRaw) {
+                btn.className = 'font-mono-tech text-[11px] px-2.5 py-1 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-400 font-semibold transition';
+                showToast('Apple ProRAW 12-bit aktiveret');
+            } else {
+                btn.className = 'font-mono-tech text-[11px] px-2.5 py-1 rounded-lg border border-white/10 bg-zinc-800 text-zinc-400 transition';
+                showToast('Standard HEIF/JPEG aktiveret');
+            }
+        }
+
+        function toggleGrid() {
+            state.showGrid = !state.showGrid;
+            document.getElementById('gridOverlay').classList.toggle('hidden', !state.showGrid);
+            document.getElementById('btnGrid').textContent = state.showGrid ? 'Gitter: TIL' : 'Gitter: FRA';
+        }
+
+        function updateCameraEv(val) {
+            state.cameraEv = parseFloat(val);
+            const formatted = state.cameraEv > 0 ? `+${state.cameraEv.toFixed(1)}` : state.cameraEv.toFixed(1);
+            document.getElementById('cameraEvValue').textContent = formatted;
+            document.getElementById('hudEv').textContent = `EV ${formatted}`;
+
+            if (!state.usingFallbackScene) {
+                const brightness = 1 + (state.cameraEv * 0.22);
+                videoEl.style.filter = `brightness(${brightness})`;
+            }
+        }
+
+        // AI AUTO FRAME: Scanner motivet og starter Live Tracking
+        function triggerAutoFrame() {
+            resetAiCoach();
+            state.aiMode = 'scanning';
+
+            const laser = document.getElementById('aiScanLaser');
+            const coachText = document.getElementById('aiCoachText');
+            const coachIcon = document.getElementById('aiCoachIcon');
+
+            laser.classList.remove('hidden');
+            coachIcon.textContent = '◎';
+            coachText.textContent = 'AI analyserer lys, dybde og det gyldne snit...';
+
+            setTimeout(() => {
+                laser.classList.add('hidden');
+                state.aiMode = 'tracking';
+
+                // Placer smart AI-ramme i det gyldne snit
+                state.targetBox = { x: 0.22, y: 0.20, w: 0.56, h: 0.58 };
+                // Start med en realistisk forskydning så brugeren kan guide den på plads
+                state.trackingOffset = { x: 0.14, y: -0.10 };
+                document.getElementById('tiltSimSlider').value = 45;
+
+                document.getElementById('targetFrameBox').classList.remove('hidden');
+                document.getElementById('centerGuideBox').classList.remove('hidden');
+                document.getElementById('targetFrameLabel').innerHTML = '<span>AI MOTIV LÅST • 98%</span>';
+                document.getElementById('trackingSimulatorBar').classList.remove('hidden');
+
+                updateTrackingVisuals();
+            }, 1300);
+        }
+
+        // YOUR FRAME: Lad brugeren tegne sin egen firkant direkte på søgeren
+        function toggleYourFrameMode() {
+            if (state.aiMode === 'yourframe_draw' || state.aiMode === 'yourframe_locked') {
+                resetAiCoach();
+                return;
+            }
+
+            resetAiCoach();
+            state.aiMode = 'yourframe_draw';
+            const drawLayer = document.getElementById('yourFrameDrawLayer');
+            drawLayer.classList.remove('hidden');
+
+            document.getElementById('aiCoachIcon').textContent = '✎';
+            document.getElementById('aiCoachText').textContent = 'Træk en firkant med fingeren omkring dit motiv';
+            document.getElementById('btnYourFrame').classList.add('border-amber-500', 'bg-amber-500/10');
+        }
+
+        function initYourFrameDrawing() {
+            const drawLayer = document.getElementById('yourFrameDrawLayer');
+            const targetBoxEl = document.getElementById('targetFrameBox');
+            let isDrawing = false;
+            let startX = 0, startY = 0;
+
+            const getRelPos = (e) => {
+                const rect = drawLayer.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)),
+                    y: Math.max(0, Math.min(1, (clientY - rect.top) / rect.height))
+                };
+            };
+
+            const onStart = (e) => {
+                if (state.aiMode !== 'yourframe_draw') return;
+                isDrawing = true;
+                const pos = getRelPos(e);
+                startX = pos.x;
+                startY = pos.y;
+                targetBoxEl.classList.remove('hidden');
+                document.getElementById('targetFrameLabel').innerHTML = '<span>YOUR FRAME</span>';
+            };
+
+            const onMove = (e) => {
+                if (!isDrawing) return;
+                const pos = getRelPos(e);
+                const x = Math.min(startX, pos.x);
+                const y = Math.min(startY, pos.y);
+                const w = Math.max(0.15, Math.abs(pos.x - startX));
+                const h = Math.max(0.15, Math.abs(pos.y - startY));
+
+                state.targetBox = { x, y, w, h };
+                targetBoxEl.style.left = `${x * 100}%`;
+                targetBoxEl.style.top = `${y * 100}%`;
+                targetBoxEl.style.width = `${w * 100}%`;
+                targetBoxEl.style.height = `${h * 100}%`;
+            };
+
+            const onEnd = () => {
+                if (!isDrawing) return;
+                isDrawing = false;
+                drawLayer.classList.add('hidden');
+                state.aiMode = 'yourframe_locked';
+                state.trackingOffset = { x: 0.08, y: 0.06 };
+                document.getElementById('tiltSimSlider').value = 25;
+                document.getElementById('centerGuideBox').classList.remove('hidden');
+                document.getElementById('trackingSimulatorBar').classList.remove('hidden');
+                updateTrackingVisuals();
+            };
+
+            drawLayer.addEventListener('mousedown', onStart);
+            drawLayer.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+
+            drawLayer.addEventListener('touchstart', onStart, { passive: true });
+            drawLayer.addEventListener('touchmove', onMove, { passive: true });
+            window.addEventListener('touchend', onEnd);
+        }
+
+        // Gyroskop / Orienterings-tracking til mobiltelefoner
+        function setupOrientationTracking() {
+            window.addEventListener('deviceorientation', (event) => {
+                if (state.aiMode !== 'tracking' && state.aiMode !== 'yourframe_locked') return;
+                if (event.beta === null || event.gamma === null) return;
+
+                // Beregn subtil bevægelse ud fra telefonens hældning
+                const normX = Math.max(-0.25, Math.min(0.25, event.gamma / 90));
+                const normY = Math.max(-0.25, Math.min(0.25, (event.beta - 65) / 90));
+                state.trackingOffset = { x: normX, y: normY };
+                updateTrackingVisuals();
+            });
+        }
+
+        function updateSimulatedTracking(val) {
+            const v = parseFloat(val) / 100; // -1 til 1
+            state.trackingOffset = {
+                x: v * 0.22,
+                y: -v * 0.16
+            };
+            updateTrackingVisuals();
+        }
+
+        function updateTrackingVisuals() {
+            const box = document.getElementById('targetFrameBox');
+            const coachText = document.getElementById('aiCoachText');
+            const coachIcon = document.getElementById('aiCoachIcon');
+            const coachPill = document.getElementById('aiCoachPill');
+            const shutterBtn = document.getElementById('shutterButton');
+
+            const displayX = Math.max(0.04, Math.min(0.96 - state.targetBox.w, state.targetBox.x + state.trackingOffset.x));
+            const displayY = Math.max(0.06, Math.min(0.94 - state.targetBox.h, state.targetBox.y + state.trackingOffset.y));
+
+            box.style.left = `${displayX * 100}%`;
+            box.style.top = `${displayY * 100}%`;
+            box.style.width = `${state.targetBox.w * 100}%`;
+            box.style.height = `${state.targetBox.h * 100}%`;
+
+            const dist = Math.hypot(state.trackingOffset.x, state.trackingOffset.y);
+
+            if (dist < 0.045) {
+                // PERFEKT KOMPOSITION! Udløseren lyser op i guld
+                state.isCompositionLocked = true;
+                shutterBtn.classList.add('shutter-locked');
+                box.classList.replace('border-amber-400', 'border-emerald-400');
+                coachPill.classList.add('border-amber-400', 'bg-amber-500/20');
+                coachIcon.textContent = '★';
+                coachText.textContent = 'Perfekt komposition! Tryk på udløseren';
+            } else {
+                state.isCompositionLocked = false;
+                shutterBtn.classList.remove('shutter-locked');
+                box.classList.replace('border-emerald-400', 'border-amber-400');
+                coachPill.classList.remove('border-amber-400', 'bg-amber-500/20');
+
+                // Retningspile der guider brugeren
+                if (Math.abs(state.trackingOffset.x) > Math.abs(state.trackingOffset.y)) {
+                    if (state.trackingOffset.x > 0) {
+                        coachIcon.textContent = '→';
+                        coachText.textContent = 'Bevæg kameraet lidt til højre';
+                    } else {
+                        coachIcon.textContent = '←';
+                        coachText.textContent = 'Bevæg kameraet lidt til venstre';
+                    }
+                } else {
+                    if (state.trackingOffset.y > 0) {
+                        coachIcon.textContent = '↓';
+                        coachText.textContent = 'Vip telefonen en smule nedad';
+                    } else {
+                        coachIcon.textContent = '↑';
+                        coachText.textContent = 'Vip telefonen en smule opad';
+                    }
+                }
+            }
+        }
+
+        function resetAiCoach() {
+            state.aiMode = 'idle';
+            state.isCompositionLocked = false;
+            document.getElementById('aiScanLaser').classList.add('hidden');
+            document.getElementById('targetFrameBox').classList.add('hidden');
+            document.getElementById('centerGuideBox').classList.add('hidden');
+            document.getElementById('yourFrameDrawLayer').classList.add('hidden');
+            document.getElementById('trackingSimulatorBar').classList.add('hidden');
+            document.getElementById('shutterButton').classList.remove('shutter-locked');
+            document.getElementById('btnYourFrame').classList.remove('border-amber-500', 'bg-amber-500/10');
+            document.getElementById('aiCoachPill').classList.remove('border-amber-400', 'bg-amber-500/20');
+            document.getElementById('aiCoachIcon').textContent = '✦';
+            document.getElementById('aiCoachText').textContent = 'Klar — Tryk Auto Frame eller tegn selv';
+        }
+
+        // ==========================================
+        // 4. TAG BILLEDE & SEND TIL MØRKEKAMMER
+        // ==========================================
+        function capturePhoto() {
+            // Lukker-blink effekt
+            const vf = document.getElementById('viewfinderFrame');
+            vf.style.opacity = '0.2';
+            setTimeout(() => { vf.style.opacity = '1'; }, 120);
+
+            const sourceEl = state.usingFallbackScene ? fallbackCanvas : videoEl;
+            const srcW = state.usingFallbackScene ? fallbackCanvas.width : (videoEl.videoWidth || 1920);
+            const srcH = state.usingFallbackScene ? fallbackCanvas.height : (videoEl.videoHeight || 2560);
+
+            // Beregn beskæring ud fra valgt Aspect Ratio (3:4, 4:5, 1:1, 9:16) ved FULD sensoropløsning
+            const [rw, rh] = state.aspectRatio.split(':').map(Number);
+            const targetAspect = rw / rh;
+            const srcAspect = srcW / srcH;
+
+            let cropW = srcW, cropH = srcH, cropX = 0, cropY = 0;
+            if (srcAspect > targetAspect) {
+                cropW = srcH * targetAspect;
+                cropX = (srcW - cropW) / 2;
+            } else {
+                cropH = srcW / targetAspect;
+                cropY = (srcH - cropH) / 2;
+            }
+
+            // Hvis brugeren brugte Your Frame, beskær præcis til deres ramme
+            if (state.aiMode === 'yourframe_locked') {
+                cropX += cropW * state.targetBox.x;
+                cropY += cropH * state.targetBox.y;
+                cropW *= state.targetBox.w;
+                cropH *= state.targetBox.h;
+            }
+
+            // Bevar 100% af den native kameraopløsning (ingen nedskalering!)
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = Math.round(cropW);
+            offCanvas.height = Math.round(cropH);
+
+            const offCtx = offCanvas.getContext('2d');
+            offCtx.imageSmoothingEnabled = true;
+            offCtx.imageSmoothingQuality = 'high';
+
+            if (state.facingMode === 'user' && !state.usingFallbackScene) {
+                offCtx.translate(offCanvas.width, 0);
+                offCtx.scale(-1, 1);
+            }
+
+            if (state.cameraEv !== 0 && !state.usingFallbackScene) {
+                offCtx.filter = `brightness(${1 + state.cameraEv * 0.22})`;
+            }
+            offCtx.drawImage(sourceEl, cropX, cropY, cropW, cropH, 0, 0, offCanvas.width, offCanvas.height);
+
+            state.sourceImage = offCanvas;
+            const lensText = document.getElementById('hudLens').textContent;
+            state.darkroom.cameraTitle = state.proRaw ? `IPHONE PRORAW (${offCanvas.width}×${offCanvas.height})` : `SHOT ON IPHONE • FRAMED`;
+            state.darkroom.cameraExif = `${lensText}  •  1/250s  •  ISO 160`;
+            document.getElementById('inputCameraModel').value = state.darkroom.cameraTitle;
+            document.getElementById('inputCameraExif').value = state.darkroom.cameraExif;
+
+            showToast(`Optaget i fuld opløsning (${offCanvas.width}×${offCanvas.height})`);
+            switchTab('darkroom');
+        }
+
+        function handleImageUpload(event, isNative48MP = false) {
             const file = event.target.files[0];
             if (!file) return;
 
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            const fileURL = URL.createObjectURL(file);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Bevar op til fuld 48MP / 4K opløsning uden kvalitetstab
+                    const offCanvas = document.createElement('canvas');
+                    const maxDim = 4096;
+                    const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+                    offCanvas.width = Math.round(img.width * scale);
+                    offCanvas.height = Math.round(img.height * scale);
+                    const ctx = offCanvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, offCanvas.width, offCanvas.height);
 
-            if (file.type.startsWith('video/')) {
-                const video = document.createElement('video');
-                video.src = fileURL;
-                video.controls = true;
-                container.appendChild(video);
-            } else {
-                const img = document.createElement('img');
-                img.src = fileURL;
-                container.appendChild(img);
-            }
-        }
-
-        let activeTimers = {};
-        let timerTimeLeft = {};
-
-        function playDingSound() {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            gain.gain.setValueAtTime(1, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start();
-            osc.stop(ctx.currentTime + 1.2);
-        }
-
-        function startCustomTimer(timerId) {
-            const seconds = parseInt(document.getElementById(`select-${timerId}`).value);
-            startTimer(timerId, seconds);
-        }
-
-        function startTimer(timerId, durationSeconds) {
-            if (activeTimers[timerId]) clearInterval(activeTimers[timerId]);
-
-            timerTimeLeft[timerId] = durationSeconds;
-            const display = document.getElementById(timerId);
-
-            updateDisplay(display, timerTimeLeft[timerId]);
-
-            activeTimers[timerId] = setInterval(() => {
-                timerTimeLeft[timerId]--;
-                updateDisplay(display, timerTimeLeft[timerId]);
-
-                if (timerTimeLeft[timerId] <= 0) {
-                    clearInterval(activeTimers[timerId]);
-                    playDingSound();
-                }
-            }, 1000);
-        }
-
-        function stopTimer(timerId) {
-            if (activeTimers[timerId]) {
-                clearInterval(activeTimers[timerId]);
-                activeTimers[timerId] = null;
-            }
-        }
-
-        function updateDisplay(element, seconds) {
-            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const s = (seconds % 60).toString().padStart(2, '0');
-            element.innerText = `${m}:${s}`;
-        }
-
-        function renderTrainingCalendar() {
-            const grid = document.getElementById('training-calendar-days');
-            grid.innerHTML = '';
-
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateKey = `train-${year}-${month + 1}-${day}`;
-                const isTrained = localStorage.getItem(dateKey) === 'true';
-
-                const cell = document.createElement('div');
-                cell.className = `day-cell ${isTrained ? 'trained' : ''}`;
-                cell.innerHTML = `<span>${day}</span>${isTrained ? '<span class="check-mark">✓</span>' : ''}`;
-
-                cell.onclick = () => {
-                    const newState = !isTrained;
-                    localStorage.setItem(dateKey, newState);
-                    renderTrainingCalendar();
-                };
-
-                grid.appendChild(cell);
-            }
-        }
-
-        function renderWeightCalendar() {
-            const grid = document.getElementById('weight-calendar-days');
-            grid.innerHTML = '';
-
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateKey = `weight-${year}-${month + 1}-${day}`;
-                const savedWeight = localStorage.getItem(dateKey) || '';
-
-                const cell = document.createElement('div');
-                cell.className = 'day-cell';
-                
-                let content = `<span>${day}</span>`;
-                if (savedWeight) content += `<span class="weight-tag">${savedWeight} kg</span>`;
-                cell.innerHTML = content;
-
-                const btn = document.createElement('button');
-                btn.className = 'cal-btn';
-                btn.innerText = 'Vægt';
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    const input = prompt(`Indtast vægt for d. ${day}/${month + 1}:`, savedWeight);
-                    if (input !== null) {
-                        localStorage.setItem(dateKey, input.trim());
-                        renderWeightCalendar();
+                    state.sourceImage = offCanvas;
+                    if (isNative48MP) {
+                        state.darkroom.cameraTitle = `IPHONE 48MP HDR • FRAMED`;
+                        document.getElementById('inputCameraModel').value = state.darkroom.cameraTitle;
                     }
+                    switchTab('darkroom');
+                    showToast(`Indlæst i fuld kvalitet (${offCanvas.width}×${offCanvas.height})`);
                 };
-
-                cell.appendChild(btn);
-                grid.appendChild(cell);
-            }
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
-        renderProgram();
+        function createDefaultDemoPhoto() {
+            // Skaber et stemningsfuldt analogt prøvebillede til Mørkekammeret ved opstart
+            const c = document.createElement('canvas');
+            c.width = 900;
+            c.height = 1125;
+            const ctx = c.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 900, 1125);
+            grad.addColorStop(0, '#1e293b');
+            grad.addColorStop(0.5, '#9a3412');
+            grad.addColorStop(1, '#f59e0b');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 900, 1125);
+
+            // Sol & arkitektur silhuet
+            const sun = ctx.createRadialGradient(620, 420, 15, 620, 420, 260);
+            sun.addColorStop(0, '#ffffff');
+            sun.addColorStop(0.3, '#fde047');
+            sun.addColorStop(1, 'rgba(245,158,11,0)');
+            ctx.fillStyle = sun;
+            ctx.fillRect(0, 0, 900, 1125);
+
+            ctx.fillStyle = '#121010';
+            ctx.fillRect(0, 760, 900, 365);
+            ctx.fillRect(140, 320, 120, 460);
+            ctx.beginPath();
+            ctx.arc(200, 320, 60, Math.PI, 0);
+            ctx.fill();
+
+            state.sourceImage = c;
+        }
+
+        // ==========================================
+        // 7. EKSPORT / DOWNLOAD & MOBIL DELING (KAMERARULLE)
+        // ==========================================
+        async function downloadFinalImage() {
+            const timestamp = new Date().toISOString().slice(0, 10);
+            const useLosslessPng = state.proRaw;
+            const mimeType = useLosslessPng ? 'image/png' : 'image/jpeg';
+            const ext = useLosslessPng ? 'png' : 'jpg';
+            const fileName = `FRAMED_${state.darkroom.film.toUpperCase()}_${timestamp}.${ext}`;
+
+            showToast('Fremkalder fuld opløsning...');
+
+            darkroomCanvas.toBlob(async (blob) => {
+                if (!blob) return;
+
+                // På iPhone / Android: Brug Web Share API så brugeren kan trykke "Gem billede" direkte i Kamerarullen
+                const file = new File([blob], fileName, { type: mimeType });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: 'FRAMED Analog Foto'
+                        });
+                        showToast('Klar til at gemme i Kamerarulle!');
+                        return;
+                    } catch (err) {
+                        if (err.name === 'AbortError') return;
+                    }
+                }
+
+                // Fallback direkte download på computer / ældre browsere
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+                showToast(`Gemt i høj opløsning (${ext.toUpperCase()})!`);
+            }, mimeType, 0.98);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('opacity-0');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2600);
+        }
     </script>
 </body>
 </html>
